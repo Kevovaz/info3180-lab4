@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <h2>{{ description }}</h2>
+    
+    <div class="grid-container">
+    {% for image in lst %}
+    		        	        	
+	        <img src="{{ url_for('get_image', file_name=image) }}" /></img>       
+        
+    {% endfor %}
+    </div>
+    {# Example usage of route for files not in static folder #}
+    
+{% endblock %}

@@ -6,7 +6,7 @@ This file creates your application.
 """
 import os
 from app import app
-from flask import render_template, request, redirect, url_for, flash, session, abort
+from flask import render_template, request, redirect, url_for, flash, session, abort, send_from_directory
 from werkzeug.utils import secure_filename
 from app.forms import UploadForm
 
@@ -66,6 +66,16 @@ def logout():
     flash('You were logged out', 'success')
     return redirect(url_for('home'))
 
+def get_uploaded_images():
+    imagelist = []
+    for subdir, dirs, files in os.walk(app.config['UPLOAD_FOLDER']):
+        for image in files:
+            if (image.endswith("jpg")) or (image.endswith("jpeg")) or (image.endswith("png")):
+                imagelist.append(image)
+    print (imagelist)
+    return imagelist
+
+
 
 ###
 # The functions below should be applicable to all Flask apps.
@@ -79,6 +89,23 @@ def flash_errors(form):
                 getattr(form, field).label.text,
                 error
 ), 'danger')
+
+
+@app.route('/uploads/<file_name>')
+def get_image(file_name):
+    """Send your static text file."""
+    root_dir = os.getcwd()
+    return send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER']), file_name, as_attachment=True)
+
+@app.route('/files')
+def files():
+    if not session.get('logged_in'):
+        abort(401)
+    imagelist = get_uploaded_images()
+    
+    return render_template('files.html', lst = imagelist)
+    
+
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):

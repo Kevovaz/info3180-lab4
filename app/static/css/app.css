@@ -1,3 +1,15 @@
 body {
     padding-top: 5rem;
 }
+
+.grid-container { 
+  display: grid;
+  grid-template-columns: 20% 20% 20%;
+  grid-gap: 20px;
+  align-items: stretch;
+  justify-items: stretch;
+  }
+img {
+  height:100%;
+  width:100%;
+}
